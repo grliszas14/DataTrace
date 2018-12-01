@@ -14,21 +14,46 @@
 #include "mainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-	QWidget(parent)
+	QMainWindow(parent)
 {
-	button_ = new QPushButton(tr("Push me!"));
-	textBrowser_ = new QTextBrowser();
+	QWidget *window = new QWidget;
+	setCentralWidget(window);
+	window->resize(800,600);
 
-	QGridLayout *mainLayout = new QGridLayout;
-	mainLayout->addWidget(button_,0,0);
-	mainLayout->addWidget(textBrowser_,1,0);
-	setLayout(mainLayout);
-	setWindowTitle(tr("Connecting buttons to processes.."));
+	fileMenu_ = new QMenu();
+	graphsFrame_ = new QFrame();  //TODO
+	rightPanel_ = new QFrame();	  //TODO
+
+	createMenus();
+
+	QHBoxLayout * mainLayout = new QHBoxLayout();
+	mainLayout->addWidget(graphsFrame_);
+	mainLayout->addWidget(rightPanel_);
+
+	window->setLayout(mainLayout);
+	setWindowTitle(tr("Overviewer"));
+	window->show();
 }
+
+void MainWindow::createMenus()
+{
+	fileMenu_ = menuBar()->addMenu(tr("&File"));
+	editMenu_ = menuBar()->addMenu(tr("&Edit"));
+	helpMenu_ = menuBar()->addMenu(tr("&Help"));
+}
+
+#ifndef QT_NO_CONTEXTMENU
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+	QMenu menu(this);
+	menu.exec(event->globalPos());
+}
+#endif // QT_NO_CONTEXTMENU
 
 MainWindow::~MainWindow()
 {
-	delete button_;
-	delete textBrowser_;
+	delete fileMenu_;
+	delete graphsFrame_;
+	delete rightPanel_;
 }
 
