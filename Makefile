@@ -369,7 +369,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-mainWindow.o: Overviewer/mainWindow.cpp Overviewer/mainWindow.h
+mainWindow.o: Overviewer/mainWindow.cpp Overviewer/mainWindow.h \
+		LibraryDT/configParser.cpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainWindow.o Overviewer/mainWindow.cpp
 
 overviewer.o: Overviewer/overviewer.cpp Overviewer/mainWindow.h

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <QtWidgets>
 #include "mainWindow.h"
+#include "../LibraryDT/configParser.cpp"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
