@@ -12,7 +12,7 @@ make
 ./DataTrace
 
 Windows:
-
+//TODO
 
 *** Uruchomienie i przetestowanie serwera: ***
 
