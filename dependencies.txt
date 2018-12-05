@@ -1,0 +1,5 @@
+To make app work you need libraries:
+
+C++: Qt5.9.5
+
+Python: weather-api
