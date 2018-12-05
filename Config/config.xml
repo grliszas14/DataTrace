@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parameters>
+	<param name="Polska:Warszawa:Temperatura zewnętrzna" short_name="Temp. zewnętrzna" unit="°C" daemon="../Daemons/get_temperature.py"/>
+</parameters>
