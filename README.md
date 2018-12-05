@@ -4,6 +4,9 @@ Autorzy:
 Grzegorz Wojciechowski
 Michał Skarzyński
 
+Projekt zarządzany jest przez system kontroli wersji Git i przechowywany jest w repozytorium github:
+https://github.com/grliszas14/DataTrace
+
 *** Uruchomienie programu przeglądającego: ***
 Linux:
 
