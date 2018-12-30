@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parameters>
-	<param name="Polska:Warszawa:Temperatura zewnętrzna" short_name="Temp. zewnętrzna" unit="°C" daemon="../Daemons/get_temperature.py"/>
+	<param name="Polska_Warszawa_Temperatura_zewnetrzna" short_name="Warszawa temp." unit="°C" daemon="../Daemons/get_warsaw_temperature.py"/>
+	<param name="Polska_Gdansk_Temperatura_zewnetrzna" short_name="Gdansk temp." unit="°C" daemon="../Daemons/get_gdansk_temperature.py"/>
+	<param name="Polska_Wroclaw_Temperatura_zewnetrzna" short_name="Wroclaw temp." unit="°C" daemon="../Daemons/get_wroclaw_temperature.py"/>
+	<param name="Polska_Krakow_Temperatura_zewnetrzna" short_name="Krakow temp." unit="°C" daemon="../Daemons/get_cracow_temperature.py"/>
+	<param name="Polska_Lodz_Temperatura_zewnetrzna" short_name="Lodz temp." unit="°C" daemon="../Daemons/get_lodz_temperature.py"/>
 </parameters>
