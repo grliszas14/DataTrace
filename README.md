@@ -6,6 +6,13 @@ Grzegorz Wojciechowski
 Projekt zarządzany jest przez system kontroli wersji Git i przechowywany jest w repozytorium github:
 https://github.com/grliszas14/DataTrace
 
+*** Do uruchomienia wymagane są: ***
+Qt w wersji 5
+Python2.7
+MariaDB (or MySQL)
+(sudo apt install mariadb-client-core-10.1)
+MySQLdb - python-mysqldb
+
 *** Uruchomienie programu przeglądającego: ***
 Linux:
 

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- All four attributes are obligatory!
+
+	name		- name for table in database
+	short_name	- displaying in overviewer
+	unit		- self explaining
+	daemon		- daemon which collects specified data
+-->
 <parameters>
 	<param name="Polska_Warszawa_Temperatura_zewnetrzna" short_name="Warszawa temp." unit="°C" daemon="../Daemons/get_warsaw_temperature.py"/>
 	<param name="Polska_Gdansk_Temperatura_zewnetrzna" short_name="Gdansk temp." unit="°C" daemon="../Daemons/get_gdansk_temperature.py"/>

@@ -1,6 +1,7 @@
 import socket
 import threading
 import xml.etree.ElementTree as ET
+import MySQLdb
 
 HOST, PORT = 'localhost', 14572
 #TODO make separate path for Windows
@@ -21,8 +22,23 @@ for idx,parameter in enumerate(root):
 	PARAM_UNIT.append(parameter.get('unit'))
 	PARAM_DAEMON.append(parameter.get('daemon'))
 
-# ------ CHECK IF PARAMS IN DATABASE -----
+# -- CHECK IF PARAMS TABLE IN DATABASE ---
+# -------- IF NOT CREATE TABLE -----------
+db = MySQLdb.connect(host = 'localhost',
+					user = 'grliszas14',
+					passwd = 'test',
+					db = 'DataTrace')
+cur = db.cursor()
 
+for pname in PARAM_NAME:
+	query = 'SELECT * FROM information_schema.tables ' + 'WHERE table_schema = \'DataTrace\' ' + 'AND table_name = \'' + pname + '\''
+	cur.execute(query)
+	if cur.rowcount == 0:
+		print('Table ' + pname + ' not exists, creating...')
+		new_table = 'CREATE TABLE IF NOT EXISTS ' + pname + ' ( date TIMESTAMP, value INT )'
+		cur.execute(new_table)
+	else:
+		print('Table ' + pname + ' exists.')
 
 # ------------ RUN DAEMONS ---------------
 
