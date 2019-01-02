@@ -2,6 +2,11 @@ import socket
 import threading
 import xml.etree.ElementTree as ET
 import MySQLdb
+import pymysql
+import subprocess
+import os
+import time
+from datetime import datetime
 
 HOST, PORT = 'localhost', 14572
 #TODO make separate path for Windows
@@ -39,9 +44,15 @@ for pname in PARAM_NAME:
 		cur.execute(new_table)
 	else:
 		print('Table ' + pname + ' exists.')
+cur.close()
+db.close()
 
 # ------------ RUN DAEMONS ---------------
-
+# -------GIVE PROPER ID TO DAEMON --------
+for idx, daemon in enumerate(PARAM_DAEMON):
+	command = daemon + ' ' + str(idx)
+	run_daemon_command = 'python ' + daemon + ' ' + str(idx)
+	run_daemon = subprocess.Popen(run_daemon_command, shell=True, stdout=subprocess.PIPE)
 
 # ------------ RUN SERVER ----------------
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -52,13 +63,25 @@ print 'Listening on {}:{}'.format(HOST, PORT)
 
 def handle_client_connection(client_socket):
 	request = client_socket.recv(1024)
-	print 'Received: {}'.format(request)
 	client_socket.send(request)
 	client_socket.close()
 
+	# ---- SAVE RECEIVED VALUE TO DATABASE -------
+	db = MySQLdb.connect(host = 'localhost',
+						user = 'grliszas14',
+						passwd = 'test',
+						db = 'DataTrace')
+	cur = db.cursor()
+	tmp = request.split(',')
+	tmp[0] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(tmp[0])))
+	SQL_SAVE = 'INSERT INTO ' + PARAM_NAME[int(tmp[2])] + ' (date, value) VALUES (\'' + tmp[0] + '\',' + tmp[1] + ')'
+	#print(SQL_SAVE) #TODO: save to log file
+	cur.execute(SQL_SAVE)
+	db.commit()
+	cur.close()
+
 while True:
 	client_sock, address = server.accept()
-	print 'Accepted connection from {}:{}'.format(address[0], address[1])
 	client_handler = threading.Thread(
 		target=handle_client_connection,
 		args=(client_sock,)
