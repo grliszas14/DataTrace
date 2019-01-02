@@ -2,7 +2,6 @@ import socket
 import threading
 import xml.etree.ElementTree as ET
 import MySQLdb
-import pymysql
 import subprocess
 import os
 import time

@@ -27,10 +27,7 @@ Windows:
 
 python sciezka_do_projektu/Server/server.py
 
-w osobnym terminalu
-python sciezka_do_projektu/Daemons/get_temperature.py
-
-(przykładowy demon zbiera dane o temperaturze w Warszawie i wysyła do serwera, serwer w konsoli wyświetla odebraną daną (timestamp, temperatura))
+(przykładowe demony zbierają dane o temperaturze w dużych polskich miastach i wysyłają je do serwera, serwer zapisuje te dane do bazy danych)
 
 *** Uruchomienie testów: ***
 
