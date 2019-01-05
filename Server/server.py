@@ -48,10 +48,10 @@ db.close()
 
 # ------------ RUN DAEMONS ---------------
 # -------GIVE PROPER ID TO DAEMON --------
-for idx, daemon in enumerate(PARAM_DAEMON):
-	command = daemon + ' ' + str(idx)
-	run_daemon_command = 'python ' + daemon + ' ' + str(idx)
-	run_daemon = subprocess.Popen(run_daemon_command, shell=True, stdout=subprocess.PIPE)
+#for idx, daemon in enumerate(PARAM_DAEMON):
+#	command = daemon + ' ' + str(idx)
+#	run_daemon_command = 'python ' + daemon + ' ' + str(idx)
+#	run_daemon = subprocess.Popen(run_daemon_command, shell=True, stdout=subprocess.PIPE)
 
 # ------------ RUN SERVER ----------------
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -62,6 +62,7 @@ print 'Listening on {}:{}'.format(HOST, PORT)
 
 def handle_client_connection(client_socket):
 	request = client_socket.recv(1024)
+	print 'Received: {}'.format(request)
 	client_socket.send(request)
 	client_socket.close()
 

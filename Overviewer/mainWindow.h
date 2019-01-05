@@ -5,7 +5,7 @@
  *
  *    Description:
  *
- *        Authors:  Grzegorz Wojciechowski, Michał Skarzyński
+ *        Authors:  Grzegorz Wojciechowski
  *
  * =====================================================================================
  */
@@ -14,6 +14,8 @@
 
 #include <QMainWindow>
 #include <QFrame>
+#include <memory>
+#include "controlPanel.h"
 
 class MainWindow: public QMainWindow
 {
@@ -31,11 +33,17 @@ protected:
 private:
 	void createMenus();
 
+	// GUI attributes
 	QMenu* fileMenu_;
 	QMenu* editMenu_;
 	QMenu* helpMenu_;
 	QFrame* graphsFrame_;
-	QFrame* rightPanel_;
+	ControlPanel* rightPanel_;
+
+	// Data sets attributes
+	int numberOfQueryRows;
+	std::unique_ptr<int[]> dataSeriesValue;
+	std::unique_ptr<QDateTime[]> dataSeriesTimestamp;
 };
 
 #endif // MAINWINDOW_H
