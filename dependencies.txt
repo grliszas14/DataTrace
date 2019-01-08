@@ -3,5 +3,6 @@ To make app work you need libraries:
 C++:	Qt5.9.5
 		libqt5charts5-dev
 		libmysqlclient-dev
+		librapidxml-dev
 Python: weather-api
 		MySQLdb

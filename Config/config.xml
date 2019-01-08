@@ -5,6 +5,7 @@
 	short_name	- displaying in overviewer
 	unit		- self explaining
 	daemon		- daemon which collects specified data
+	series_set	- set to which parameter belongs to in overviewer
 -->
 <parameters>
 	<param name="Polska_Warszawa_Temperatura_zewnetrzna" short_name="Warszawa temp." unit="°C" daemon="../Daemons/get_warsaw_temperature.py"/>

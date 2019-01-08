@@ -9,6 +9,7 @@
  *
  * =====================================================================================
  */
+#include <iostream>
 #include <stdlib.h>
 #include <QtWidgets>
 #include <QtGui>
@@ -19,16 +20,24 @@
 #include <QList>
 #include "mainWindow.h"
 #include "chartsFrame.h"
-#include "../LibraryDT/configParser.cpp"
+#include "../rapidxml-1.13/rapidxml.hpp"
+#include "../rapidxml-1.13/rapidxml_utils.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	QWidget *centralWidget = new QWidget();
-	centralWidget->setFixedSize(QSize(1200,600));
+	centralWidget->setMinimumSize(QSize(1200,600));
 
 	createMenus();
 
+	// Parse config file
+	int numOfParams = CountParamsInConfig();
+	qDebug() << numOfParams;
+	parsedParameters = std::make_unique<Param[]>(numOfParams);
+	ParseConfig();
+
+	// Connect to database
 	QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
     db.setDatabaseName("DataTrace");
@@ -37,13 +46,15 @@ MainWindow::MainWindow(QWidget *parent) :
     bool ok = db.open();
 
 	if (ok == true) {
-		qInfo() << "OK";
+		qInfo() << "DATABASE CONNECTION OK";
 	} else {
-		qInfo() << "NOT OK";
+		qInfo() << "DATABASE CONNECTION NOT OK";
 	}
 
+	//TODO mechanizmy query
+
 	QSqlQuery query;
-	query.exec("SELECT * FROM Polska_Gdansk_Temperatura_zewnetrzna");
+	query.exec("SELECT * FROM " + QString::fromStdString(parsedParameters[0].name));
 
 	numberOfQueryRows = query.size();
 	qDebug() << numberOfQueryRows;
@@ -60,7 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QList<QPointF> chartPoints;
 	QLineSeries *series_ = new QLineSeries();
 
-	for (int i = 1; i < 10; ++i) {
+	// Default behaviour: display 10 first probes
+	for (int i = 0; i < 10; ++i) {
 		qDebug() << dataSeriesTimestamp[i].toMSecsSinceEpoch() << dataSeriesValue[i];
 		series_->append(QPointF(dataSeriesTimestamp[i].toMSecsSinceEpoch(), dataSeriesValue[i]));
 	}
@@ -116,6 +128,48 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 	menu.exec(event->globalPos());
 }
 #endif // QT_NO_CONTEXTMENU
+
+int MainWindow::CountParamsInConfig()
+{
+	int countParameters = 0;
+	rapidxml::file<> xmlFile("/home/grliszas14/zpr/DataTrace/Config/config.xml"); //TODO: tu nie moze byc full path
+	rapidxml::xml_document<> doc;
+	rapidxml::xml_node<> *root_node;
+	doc.parse<0>(xmlFile.data());
+
+	root_node = doc.first_node("parameters");
+	for (rapidxml::xml_node<> * param_node = root_node->first_node("param"); param_node; param_node = param_node->next_sibling())
+	{
+		countParameters++;
+	}
+
+	return countParameters;
+}
+
+void MainWindow::ParseConfig() {
+	rapidxml::file<> xmlFile("/home/grliszas14/zpr/DataTrace/Config/config.xml"); //TODO: tu nie moze byc full path
+	rapidxml::xml_document<> doc;
+	rapidxml::xml_node<> *root_node;
+	doc.parse<0>(xmlFile.data());
+
+	root_node = doc.first_node("parameters");
+	rapidxml::xml_node<> * param_node;
+	int i;
+	for (param_node = root_node->first_node("param"), i = 0;
+			param_node;
+			param_node = param_node->next_sibling(), ++i)
+	{
+		Param param = Param(param_node->first_attribute("name")->value(),
+									param_node->first_attribute("short_name")->value(),
+									param_node->first_attribute("unit")->value(),
+									"",
+									"",
+									"");
+		parsedParameters[i] = param;
+		std::cout << param.name << std::endl;
+	}
+
+}
 
 MainWindow::~MainWindow()
 {

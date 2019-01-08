@@ -22,8 +22,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += Overviewer/controlPanel.h Overviewer/mainWindow.h
-SOURCES += LibraryDT/configParser.cpp \
-           Overviewer/controlPanel.cpp \
+HEADERS += Overviewer/controlPanel.h Overviewer/mainWindow.h LibraryDT/param.h
+SOURCES += Overviewer/controlPanel.cpp \
            Overviewer/mainWindow.cpp \
-           Overviewer/overviewer.cpp
+           Overviewer/overviewer.cpp \
+		   LibraryDT/param.cpp

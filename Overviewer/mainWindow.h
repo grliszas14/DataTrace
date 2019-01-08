@@ -16,6 +16,7 @@
 #include <QFrame>
 #include <memory>
 #include "controlPanel.h"
+#include "../LibraryDT/param.h"
 
 class MainWindow: public QMainWindow
 {
@@ -32,6 +33,8 @@ protected:
 
 private:
 	void createMenus();
+	int CountParamsInConfig();
+	void ParseConfig();
 
 	// GUI attributes
 	QMenu* fileMenu_;
@@ -39,6 +42,9 @@ private:
 	QMenu* helpMenu_;
 	QFrame* graphsFrame_;
 	ControlPanel* rightPanel_;
+
+	// Parser attributes
+	std::unique_ptr<Param[]> parsedParameters;
 
 	// Data sets attributes
 	int numberOfQueryRows;
