@@ -15,6 +15,7 @@
 #include <QMainWindow>
 #include <QFrame>
 #include <memory>
+#include <QtCharts>
 #include "controlPanel.h"
 #include "../LibraryDT/param.h"
 
@@ -42,12 +43,16 @@ private:
 	QMenu* helpMenu_;
 	QFrame* graphsFrame_;
 	ControlPanel* rightPanel_;
+	QChart* chart;
+
 
 	// Parser attributes
 	std::unique_ptr<Param[]> parsedParameters;
 
 	// Data sets attributes
 	int numberOfQueryRows;
+	QLineSeries *series_[5];
+	QString legend[5] = {"", "", "", "", ""};
 	std::unique_ptr<int[]> dataSeriesValue;
 	std::unique_ptr<QDateTime[]> dataSeriesTimestamp;
 };

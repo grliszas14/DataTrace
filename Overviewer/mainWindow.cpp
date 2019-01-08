@@ -19,7 +19,7 @@
 #include <QDateTime>
 #include <QList>
 #include "mainWindow.h"
-#include "chartsFrame.h"
+#include <QtCharts>
 #include "../rapidxml-1.13/rapidxml.hpp"
 #include "../rapidxml-1.13/rapidxml_utils.hpp"
 
@@ -29,7 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QWidget *centralWidget = new QWidget();
 	centralWidget->setMinimumSize(QSize(1200,600));
 
-	createMenus();
+	//createMenus();
+	chart = new QChart();
 
 	// Parse config file
 	int numOfParams = CountParamsInConfig();
@@ -51,60 +52,66 @@ MainWindow::MainWindow(QWidget *parent) :
 		qInfo() << "DATABASE CONNECTION NOT OK";
 	}
 
+	// Check first data_set
+	std::string current_series_set = parsedParameters[0].seriesSet;
 	//TODO mechanizmy query
+	int series_counter = 0;
+	for (int j = 0; j < numOfParams; ++j ) {
+		if ( parsedParameters[j].seriesSet == current_series_set ) {
+			QSqlQuery query;
+			query.exec("SELECT * FROM " + QString::fromStdString(parsedParameters[j].name));
+			legend[j] = QString::fromStdString(parsedParameters[j].short_name);
+			numberOfQueryRows = query.size();
+			//qDebug() << numberOfQueryRows;
 
-	QSqlQuery query;
-	query.exec("SELECT * FROM " + QString::fromStdString(parsedParameters[0].name));
+			dataSeriesValue = std::make_unique<int[]>(numberOfQueryRows);
+			dataSeriesTimestamp = std::make_unique<QDateTime[]>(numberOfQueryRows);
+			int i = 0;
+			while (query.next()) {
+				dataSeriesTimestamp[i] = query.value(0).toDateTime();
+				dataSeriesValue[i] = query.value(1).toInt();
+				++i;
+			}
 
-	numberOfQueryRows = query.size();
-	qDebug() << numberOfQueryRows;
+			QList<QPointF> chartPoints;
+			series_[series_counter] = new QLineSeries();
 
-	dataSeriesValue = std::make_unique<int[]>(numberOfQueryRows);
-	dataSeriesTimestamp = std::make_unique<QDateTime[]>(numberOfQueryRows);
-	int i = 0;
-	while (query.next()) {
-		dataSeriesTimestamp[i] = query.value(0).toDateTime();
-		dataSeriesValue[i] = query.value(1).toInt();
-		++i;
+			// Default behaviour: display 10 first probes
+			for (int i = 0; i < 10; ++i) {
+				//qDebug() << dataSeriesTimestamp[i].toMSecsSinceEpoch() << dataSeriesValue[i];
+				series_[series_counter]->append(QPointF(dataSeriesTimestamp[i].toMSecsSinceEpoch(), dataSeriesValue[i]));
+			}
+
+			chart->addSeries(series_[series_counter]);
+			series_counter++;
+		}
 	}
 
-	QList<QPointF> chartPoints;
-	QLineSeries *series_ = new QLineSeries();
-
-	// Default behaviour: display 10 first probes
-	for (int i = 0; i < 10; ++i) {
-		qDebug() << dataSeriesTimestamp[i].toMSecsSinceEpoch() << dataSeriesValue[i];
-		series_->append(QPointF(dataSeriesTimestamp[i].toMSecsSinceEpoch(), dataSeriesValue[i]));
-	}
-
-    QPen pen(0xffff00);
-    pen.setWidth(6);
-	series_->setPen(pen);
-	QChart *chart = new QChart();
-	chart->setTheme(QChart::ChartThemeDark);
-    chart->addSeries(series_);
-	chart->legend()->hide();
-    chart->setTitle("Temperatury dużych miast w Polsce");
+	chart->setTheme(QChart::ChartThemeLight);
+    //chart->addSeries(series_);
+	chart->legend()->show();
+    chart->setTitle("Temperatures"); //TODO pobrac z configa
 	// Ustawiac customowo w zaleznosci od rozbieznosci danych
 	QDateTimeAxis *axisX = new QDateTimeAxis;
 	axisX->setRange(dataSeriesTimestamp[1], dataSeriesTimestamp[9]);
 	axisX->setTickCount(10);
 	axisX->setFormat("hh:mm:ss");
-	axisX->setTitleText("Data");
+	axisX->setTitleText("Date");
 	chart->addAxis(axisX, Qt::AlignBottom);
-	series_->attachAxis(axisX);
 	QValueAxis *axisY = new QValueAxis;
 	axisY->setLabelFormat("%i");
 	axisY->setTickCount(3);
-	axisY->setTitleText("Temperatury");
-	axisY->setRange(0, 4);
+	axisY->setRange(-4, 4);
 	chart->addAxis(axisY, Qt::AlignLeft);
-	series_->attachAxis(axisY);
+	for( int i = 0; i < 5; ++i) {
+		series_[i]->attachAxis(axisX);
+		series_[i]->attachAxis(axisY);
+	}
 	QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
 	// Make control panel
-	rightPanel_ = new ControlPanel();
+	rightPanel_ = new ControlPanel(chart, legend);
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	mainLayout->addWidget(chartView);
 	mainLayout->addWidget(rightPanel_);
@@ -162,7 +169,7 @@ void MainWindow::ParseConfig() {
 		Param param = Param(param_node->first_attribute("name")->value(),
 									param_node->first_attribute("short_name")->value(),
 									param_node->first_attribute("unit")->value(),
-									"",
+									param_node->first_attribute("series_set")->value(),
 									"",
 									"");
 		parsedParameters[i] = param;

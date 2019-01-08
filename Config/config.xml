@@ -8,9 +8,9 @@
 	series_set	- set to which parameter belongs to in overviewer
 -->
 <parameters>
-	<param name="Polska_Warszawa_Temperatura_zewnetrzna" short_name="Warszawa temp." unit="°C" daemon="../Daemons/get_warsaw_temperature.py"/>
-	<param name="Polska_Gdansk_Temperatura_zewnetrzna" short_name="Gdansk temp." unit="°C" daemon="../Daemons/get_gdansk_temperature.py"/>
-	<param name="Polska_Wroclaw_Temperatura_zewnetrzna" short_name="Wroclaw temp." unit="°C" daemon="../Daemons/get_wroclaw_temperature.py"/>
-	<param name="Polska_Krakow_Temperatura_zewnetrzna" short_name="Krakow temp." unit="°C" daemon="../Daemons/get_cracow_temperature.py"/>
-	<param name="Polska_Lodz_Temperatura_zewnetrzna" short_name="Lodz temp." unit="°C" daemon="../Daemons/get_lodz_temperature.py"/>
+	<param name="Polska_Warszawa_Temperatura_zewnetrzna" short_name="Warszawa temp." unit="°C" daemon="../Daemons/get_warsaw_temperature.py" series_set="Temperatures"/>
+	<param name="Polska_Gdansk_Temperatura_zewnetrzna" short_name="Gdansk temp." unit="°C" daemon="../Daemons/get_gdansk_temperature.py" series_set="Temperatures"/>
+	<param name="Polska_Wroclaw_Temperatura_zewnetrzna" short_name="Wroclaw temp." unit="°C" daemon="../Daemons/get_wroclaw_temperature.py" series_set="Temperatures"/>
+	<param name="Polska_Krakow_Temperatura_zewnetrzna" short_name="Krakow temp." unit="°C" daemon="../Daemons/get_cracow_temperature.py" series_set="Temperatures"/>
+	<param name="Polska_Lodz_Temperatura_zewnetrzna" short_name="Lodz temp." unit="°C" daemon="../Daemons/get_lodz_temperature.py" series_set="Temperatures"/>
 </parameters>

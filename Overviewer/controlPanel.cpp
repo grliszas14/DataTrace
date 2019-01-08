@@ -11,16 +11,17 @@
 #include <QFrame>
 #include "controlPanel.h"
 
-ControlPanel::ControlPanel() {
+ControlPanel::ControlPanel(QChart *left_chart, QString *legend_names) {
 	this->setMinimumSize(minimumWidth, minimumHeight);
+	chart = left_chart;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
-	CreateLegend();
+	CreateLegend(legend_names);
 	CreatePropertiesBox();
 
 	dataSetChooser = new QComboBox();
 	//TODO: dodawanie do combo boxa zestawow
 	dataSetChooser->addItem("Temperatures");
-	nightDay = new QPushButton(tr("Day/Night"));
+	nightDay = new QPushButton(tr("Set night view"));
 
 	mainLayout->addWidget(legend);
 	mainLayout->addWidget(dataSetChooser);
@@ -29,15 +30,34 @@ ControlPanel::ControlPanel() {
 
 	mainLayout->setSpacing(20);
 	setLayout(mainLayout);
+
+	connect(nightDay, SIGNAL(clicked()), this, SLOT(dayNightFunc()));
 }
 
-void ControlPanel::CreateLegend() {
+void ControlPanel::dayNightFunc() {
+	if (day_or_night == true) {
+		nightDay->setText("Set day view");
+		day_or_night = false;
+		chart->setTheme(QChart::ChartThemeDark);
+	} else {
+		nightDay->setText("Set night view");
+		day_or_night = true;
+		chart->setTheme(QChart::ChartThemeLight);
+	}
+}
+
+void ControlPanel::CreateLegend(QString *legend_names) {
 	legend = new QGroupBox(tr("Legend"));
 	QVBoxLayout *layout = new QVBoxLayout;
 
 	for (int i = 0; i < ParamsInLegend; ++i) {
-		legendLabels[i] = new QLabel(tr("Parameter name"));
-		layout->addWidget(legendLabels[i]);
+		if (legend_names[i] != "") {
+			legendLabels[i] = new QLabel(QString::number(i+1) + ". " + legend_names[i]);
+			layout->addWidget(legendLabels[i]);
+		} else {
+			legendLabels[i] = new QLabel(tr(""));
+			layout->addWidget(legendLabels[i]);
+		}
 	}
 	legend->setLayout(layout);
 }
