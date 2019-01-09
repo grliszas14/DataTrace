@@ -52,10 +52,12 @@ void ControlPanel::CreateLegend(QString *legend_names) {
 
 	for (int i = 0; i < ParamsInLegend; ++i) {
 		if (legend_names[i] != "") {
-			legendLabels[i] = new QLabel(QString::number(i+1) + ". " + legend_names[i]);
+			legendLabels[i] = new QPushButton(QString::number(i+1) + ". " + legend_names[i]);
+			legendLabels[i]->setFlat(true);
 			layout->addWidget(legendLabels[i]);
 		} else {
-			legendLabels[i] = new QLabel(tr(""));
+			legendLabels[i] = new QPushButton(tr(""));
+			legendLabels[i]->setFlat(true);
 			layout->addWidget(legendLabels[i]);
 		}
 	}

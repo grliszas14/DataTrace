@@ -45,7 +45,7 @@ private:
 	QComboBox *dataSetChooser;
 	QGroupBox *seriesProperties;
 	QPushButton *nightDay;
-	QLabel *legendLabels[ParamsInLegend];
+	QPushButton *legendLabels[ParamsInLegend];
 	QLabel *propertiesLabels[NumOfProperties];
 
 };

@@ -3,7 +3,7 @@
  *
  *       Filename:  mainWindow.cpp
  *
- *    Description:
+ *    Description:  App made for overview data gathered by DataTrace system
  *
  *        Authors:  Grzegorz Wojciechowski
  *
@@ -28,8 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	QWidget *centralWidget = new QWidget();
 	centralWidget->setMinimumSize(QSize(1200,600));
-
-	//createMenus();
 	chart = new QChart();
 
 	// Parse config file
@@ -52,9 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
 		qInfo() << "DATABASE CONNECTION NOT OK";
 	}
 
-	// Check first data_set
+	// Check first data_set and get data series
 	std::string current_series_set = parsedParameters[0].seriesSet;
-	//TODO mechanizmy query
+	//TODO mechanizmy query, oddzielna funkcja
 	int series_counter = 0;
 	for (int j = 0; j < numOfParams; ++j ) {
 		if ( parsedParameters[j].seriesSet == current_series_set ) {
@@ -62,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent) :
 			query.exec("SELECT * FROM " + QString::fromStdString(parsedParameters[j].name));
 			legend[j] = QString::fromStdString(parsedParameters[j].short_name);
 			numberOfQueryRows = query.size();
-			//qDebug() << numberOfQueryRows;
 
 			dataSeriesValue = std::make_unique<int[]>(numberOfQueryRows);
 			dataSeriesTimestamp = std::make_unique<QDateTime[]>(numberOfQueryRows);
@@ -75,21 +72,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
 			QList<QPointF> chartPoints;
 			series_[series_counter] = new QLineSeries();
+			series_[series_counter]->setName(QString::number(series_counter + 1));
 
 			// Default behaviour: display 10 first probes
 			for (int i = 0; i < 10; ++i) {
-				//qDebug() << dataSeriesTimestamp[i].toMSecsSinceEpoch() << dataSeriesValue[i];
 				series_[series_counter]->append(QPointF(dataSeriesTimestamp[i].toMSecsSinceEpoch(), dataSeriesValue[i]));
 			}
-
 			chart->addSeries(series_[series_counter]);
 			series_counter++;
 		}
 	}
 
+	// Setup and draw charts
 	chart->setTheme(QChart::ChartThemeLight);
-    //chart->addSeries(series_);
-	chart->legend()->show();
+	chart->legend()->setAlignment(Qt::AlignBottom);
     chart->setTitle("Temperatures"); //TODO pobrac z configa
 	// Ustawiac customowo w zaleznosci od rozbieznosci danych
 	QDateTimeAxis *axisX = new QDateTimeAxis;
@@ -116,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	mainLayout->addWidget(chartView);
 	mainLayout->addWidget(rightPanel_);
 
+	// Set all made things as central widget of window
 	centralWidget->setLayout(mainLayout);
 	setWindowTitle(tr("Overviewer"));
 	setCentralWidget(centralWidget);
