@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 			for (int i = 0; i < 10; ++i) {
 				series_[series_counter]->append(QPointF(dataSeriesTimestamp[i].toMSecsSinceEpoch(), dataSeriesValue[i]));
 			}
+			controlVector.push_back(std::move(dataSeriesValue));
 			chart->addSeries(series_[series_counter]);
 			series_counter++;
 		}
@@ -107,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
     chartView->setRenderHint(QPainter::Antialiasing);
 
 	// Make control panel
-	rightPanel_ = new ControlPanel(chart, legend);
+	rightPanel_ = new ControlPanel(chart, legend, &controlVector);
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	mainLayout->addWidget(chartView);
 	mainLayout->addWidget(rightPanel_);

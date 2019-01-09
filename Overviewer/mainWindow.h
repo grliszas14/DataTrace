@@ -16,6 +16,7 @@
 #include <QFrame>
 #include <memory>
 #include <QtCharts>
+#include <vector>
 #include "controlPanel.h"
 #include "../LibraryDT/param.h"
 
@@ -53,6 +54,7 @@ private:
 	int numberOfQueryRows;
 	QLineSeries *series_[5];
 	QString legend[5] = {"", "", "", "", ""};
+	std::vector<std::unique_ptr<int[]>> controlVector;
 	std::unique_ptr<int[]> dataSeriesValue;
 	std::unique_ptr<QDateTime[]> dataSeriesTimestamp;
 };
