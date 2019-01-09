@@ -8,9 +8,9 @@
 	series_set	- set to which parameter belongs to in overviewer
 -->
 <parameters>
-	<param name="Polska_Warszawa_Temperatura_zewnetrzna" short_name="Warszawa temp." unit="°C" daemon="../Daemons/get_warsaw_temperature.py" series_set="Temperatures"/>
-	<param name="Polska_Gdansk_Temperatura_zewnetrzna" short_name="Gdansk temp." unit="°C" daemon="../Daemons/get_gdansk_temperature.py" series_set="Temperatures"/>
-	<param name="Polska_Wroclaw_Temperatura_zewnetrzna" short_name="Wroclaw temp." unit="°C" daemon="../Daemons/get_wroclaw_temperature.py" series_set="Temperatures"/>
-	<param name="Polska_Krakow_Temperatura_zewnetrzna" short_name="Krakow temp." unit="°C" daemon="../Daemons/get_cracow_temperature.py" series_set="Temperatures"/>
-	<param name="Polska_Lodz_Temperatura_zewnetrzna" short_name="Lodz temp." unit="°C" daemon="../Daemons/get_lodz_temperature.py" series_set="Temperatures"/>
+	<param name="Random_number_1" short_name="Rand 1" unit="" daemon="../Daemons/get_random_int.py" series_set="Random set"/>
+	<param name="Random_number_2" short_name="Rand 2" unit="" daemon="../Daemons/get_random_int.py" series_set="Random set"/>
+	<param name="Random_number_3" short_name="Rand 3" unit="" daemon="../Daemons/get_random_int.py" series_set="Random set"/>
+	<param name="Random_number_4" short_name="Rand 4" unit="" daemon="../Daemons/get_random_int.py" series_set="Random set"/>
+	<param name="Random_number_5" short_name="Rand 5" unit="" daemon="../Daemons/get_random_int.py" series_set="Random set"/>
 </parameters>

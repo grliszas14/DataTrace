@@ -48,10 +48,10 @@ db.close()
 
 # ------------ RUN DAEMONS ---------------
 # -------GIVE PROPER ID TO DAEMON --------
-#for idx, daemon in enumerate(PARAM_DAEMON):
-#	command = daemon + ' ' + str(idx)
-#	run_daemon_command = 'python ' + daemon + ' ' + str(idx)
-#	run_daemon = subprocess.Popen(run_daemon_command, shell=True, stdout=subprocess.PIPE)
+for idx, daemon in enumerate(PARAM_DAEMON):
+	command = daemon + ' ' + str(idx)
+	run_daemon_command = 'python ' + daemon + ' ' + str(idx)
+	run_daemon = subprocess.Popen(run_daemon_command, shell=True, stdout=subprocess.PIPE)
 
 # ------------ RUN SERVER ----------------
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

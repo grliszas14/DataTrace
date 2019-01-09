@@ -3,6 +3,11 @@
  *
  *       Filename:  controlPanel.h
  *
+ *    Description:  Class containing right panel of application.
+ *					Displays legend with parameters' names, parameters' properties
+ *					if clicked on legend, chooser of data series set and button
+ *					enabling/disabling night mode.
+ *
  *         Author:  Grzegorz Wojciechowski
  *
  * =====================================================================================
@@ -27,7 +32,7 @@ class ControlPanel : public QFrame
 	Q_OBJECT
 
 public:
-	ControlPanel(QChart *chart, QString *legend_names, std::vector<std::unique_ptr<int[]>> *controlVector);
+	ControlPanel(QChart *chart, QString *legend_names, std::vector<std::unique_ptr<int[]>> *controlVector, std::vector<QString> *seriesSets);
 
 private slots:
 	void dayNightFunc();
@@ -47,6 +52,7 @@ private:
 	const int NUM_OF_PROBES_TO_CALC = 10;
 	bool day_or_night = true;
 	std::vector<std::unique_ptr<int[]>> *controlVector;
+	std::vector<QString> *seriesSets;
 
 	QChart *chart;
 	QGroupBox *outsideGroupBox;

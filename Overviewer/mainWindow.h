@@ -3,7 +3,7 @@
  *
  *       Filename:  mainWindow.h
  *
- *    Description:
+ *    Description:  App made for overviewing data gathered by DataTrace system.
  *
  *        Authors:  Grzegorz Wojciechowski
  *
@@ -45,10 +45,12 @@ private:
 	QFrame* graphsFrame_;
 	ControlPanel* rightPanel_;
 	QChart* chart;
-
+	int maxToDisplay, minToDisplay;
+	QString chartTitle;
 
 	// Parser attributes
 	std::unique_ptr<Param[]> parsedParameters;
+	std::vector<QString> seriesSets;
 
 	// Data sets attributes
 	int numberOfQueryRows;

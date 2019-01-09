@@ -3,7 +3,7 @@
  *
  *       Filename:  mainWindow.cpp
  *
- *    Description:  App made for overview data gathered by DataTrace system
+ *    Description:  App made for overviewing data gathered by DataTrace system.
  *
  *        Authors:  Grzegorz Wojciechowski
  *
@@ -18,6 +18,7 @@
 #include <QTime>
 #include <QDateTime>
 #include <QList>
+#include <algorithm>
 #include "mainWindow.h"
 #include <QtCharts>
 #include "../rapidxml-1.13/rapidxml.hpp"
@@ -29,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QWidget *centralWidget = new QWidget();
 	centralWidget->setMinimumSize(QSize(1200,600));
 	chart = new QChart();
+	maxToDisplay = -32768;
+	minToDisplay = 32768;
 
 	// Parse config file
 	int numOfParams = CountParamsInConfig();
@@ -52,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Check first data_set and get data series
 	std::string current_series_set = parsedParameters[0].seriesSet;
+	chartTitle = QString::fromStdString(current_series_set);
 	//TODO mechanizmy query, oddzielna funkcja
 	int series_counter = 0;
 	for (int j = 0; j < numOfParams; ++j ) {
@@ -67,6 +71,9 @@ MainWindow::MainWindow(QWidget *parent) :
 			while (query.next()) {
 				dataSeriesTimestamp[i] = query.value(0).toDateTime();
 				dataSeriesValue[i] = query.value(1).toInt();
+				// Calculate chart borders
+				if ( dataSeriesValue[i] > maxToDisplay) maxToDisplay = dataSeriesValue[i];
+				if ( dataSeriesValue[i] < minToDisplay) minToDisplay = dataSeriesValue[i];
 				++i;
 			}
 
@@ -87,10 +94,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Setup and draw charts
 	chart->setTheme(QChart::ChartThemeLight);
 	chart->legend()->setAlignment(Qt::AlignBottom);
-    chart->setTitle("Temperatures"); //TODO pobrac z configa
-	// Ustawiac customowo w zaleznosci od rozbieznosci danych
+    chart->setTitle(chartTitle);
 	QDateTimeAxis *axisX = new QDateTimeAxis;
-	axisX->setRange(dataSeriesTimestamp[1], dataSeriesTimestamp[9]);
+	// TODO Ustawiac customowo w zaleznosci od rozbieznosci danych
+	axisX->setRange(dataSeriesTimestamp[0], dataSeriesTimestamp[9]);
 	axisX->setTickCount(10);
 	axisX->setFormat("hh:mm:ss");
 	axisX->setTitleText("Date");
@@ -98,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	QValueAxis *axisY = new QValueAxis;
 	axisY->setLabelFormat("%i");
 	axisY->setTickCount(3);
-	axisY->setRange(-4, 4);
+	axisY->setRange(minToDisplay, maxToDisplay);
 	chart->addAxis(axisY, Qt::AlignLeft);
 	for( int i = 0; i < 5; ++i) {
 		series_[i]->attachAxis(axisX);
@@ -108,7 +115,7 @@ MainWindow::MainWindow(QWidget *parent) :
     chartView->setRenderHint(QPainter::Antialiasing);
 
 	// Make control panel
-	rightPanel_ = new ControlPanel(chart, legend, &controlVector);
+	rightPanel_ = new ControlPanel(chart, legend, &controlVector, &seriesSets);
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	mainLayout->addWidget(chartView);
 	mainLayout->addWidget(rightPanel_);
@@ -171,7 +178,9 @@ void MainWindow::ParseConfig() {
 									"",
 									"");
 		parsedParameters[i] = param;
-		std::cout << param.name << std::endl;
+		if (std::find(seriesSets.begin(), seriesSets.end(), QString::fromStdString(parsedParameters[i].seriesSet)) == seriesSets.end()) {
+			seriesSets.push_back(QString::fromStdString(parsedParameters[i].seriesSet));
+		}
 	}
 
 }

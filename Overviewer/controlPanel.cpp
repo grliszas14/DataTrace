@@ -3,6 +3,11 @@
  *
  *       Filename:  controlPanel.cpp
  *
+ *	  Description:  Class containing right panel of application.
+ *					Displays legend with parameters' names, parameters' properties
+ *					if clicked on legend, chooser of data series set and button
+ *					enabling/disabling night mode.
+ *
  *         Author:  Grzegorz Wojciechowski
  *
  * =====================================================================================
@@ -12,17 +17,18 @@
 #include <cmath>
 #include "controlPanel.h"
 
-ControlPanel::ControlPanel(QChart *left_chart, QString *legend_names, std::vector<std::unique_ptr<int[]>> *controlVectorFromMainWidget) {
+ControlPanel::ControlPanel(QChart *left_chart, QString *legend_names, std::vector<std::unique_ptr<int[]>> *controlVectorFromMainWidget, std::vector<QString> *seriesSetsFromMainWidget) {
 	this->setMinimumSize(minimumWidth, minimumHeight);
 	chart = left_chart;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	controlVector = controlVectorFromMainWidget;
+	seriesSets = seriesSetsFromMainWidget;
 	CreateLegend(legend_names);
 	CreatePropertiesBox();
 
 	dataSetChooser = new QComboBox();
-	//TODO: dodawanie do combo boxa zestawow
-	dataSetChooser->addItem("Temperatures");
+	for (unsigned int i = 0; i < seriesSets->size(); ++i)
+		dataSetChooser->addItem(seriesSets->at(i));
 	nightDay = new QPushButton(tr("Set night view"));
 
 	mainLayout->addWidget(legend);
@@ -66,8 +72,9 @@ void ControlPanel::showProperties(int series) {
 
 double ControlPanel::CalculateMin(int series) {
 	double minValue = 0;
+	// TODO docelowo index ponizej
+	minValue = controlVector->at(series)[0];
 	for( int i = 0; i < NUM_OF_PROBES_TO_CALC; ++i) {
-		minValue = controlVector->at(series)[i];
 		if( controlVector->at(series)[i] < minValue) minValue = controlVector->at(series)[i];
 	}
 	return minValue;
@@ -75,8 +82,9 @@ double ControlPanel::CalculateMin(int series) {
 
 double ControlPanel::CalculateMax(int series) {
 	double maxValue = 0;
+	// TODO docelowo index ponizej
+	maxValue = controlVector->at(series)[0];
 	for( int i = 0; i < NUM_OF_PROBES_TO_CALC; ++i) {
-		maxValue = controlVector->at(series)[i];
 		if( controlVector->at(series)[i] > maxValue) maxValue = controlVector->at(series)[i];
 	}
 	return maxValue;
@@ -85,6 +93,7 @@ double ControlPanel::CalculateMax(int series) {
 double ControlPanel::CalculateMean(int series) {
 	int sum = 0;
 	double mean = 0;
+	// TODO docelowo index ponizej
 	for( int i = 0; i < NUM_OF_PROBES_TO_CALC; ++i)
 		sum += controlVector->at(series)[i];
 	mean = sum / NUM_OF_PROBES_TO_CALC;
@@ -96,13 +105,14 @@ double ControlPanel::CalculateDeviation(int series) {
 	double deviation = 0;
 	double mean = CalculateMean(series);
 	std::vector<int> tmpToDeviation;
+	// TODO docelowo index ponizej
 	for( int i = 0; i < NUM_OF_PROBES_TO_CALC; ++i) {
 		double calculation = pow(controlVector->at(series)[i] - mean, 2);
 		tmpToDeviation.push_back(calculation);
 	}
 	for ( int n : tmpToDeviation)
 		sum += n;
-	deviation = sum / NUM_OF_PROBES_TO_CALC;
+	deviation = sqrt(sum / NUM_OF_PROBES_TO_CALC);
 
 	return deviation;
 }
