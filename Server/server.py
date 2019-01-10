@@ -8,8 +8,8 @@ import time
 from datetime import datetime
 
 HOST, PORT = 'localhost', 14572
-#TODO make separate path for Windows
-CONFIG_FILE = '../Config/config.xml'
+# Dealing with path both on Windows and Linux
+CONFIG_FILE = os.path.join('..','Config','config.xml')
 
 PARAM_NAME = []
 PARAM_NAME_SH = []
@@ -50,7 +50,12 @@ db.close()
 # -------GIVE PROPER ID TO DAEMON --------
 for idx, daemon in enumerate(PARAM_DAEMON):
 	command = daemon + ' ' + str(idx)
-	run_daemon_command = 'python ' + daemon + ' ' + str(idx)
+	cd,daemons,daemon_tmp = command.split('/')
+	path_to_daemon = os.path.join(cd, daemons, daemon_tmp)
+	if os.name == 'nt':
+		run_daemon_command = 'C:\Python27\pythonw.exe ' + path_to_daemon
+	else:
+		run_daemon_command = 'python ' + daemon + ' ' + str(idx)
 	run_daemon = subprocess.Popen(run_daemon_command, shell=True, stdout=subprocess.PIPE)
 
 # ------------ RUN SERVER ----------------

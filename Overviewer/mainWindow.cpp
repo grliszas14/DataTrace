@@ -35,7 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	minToDisplay = 32768;
 
 	// Parse config file
+#ifdef _WIN32
+    configPath = QDir::currentPath() + "/../DataTrace-master/Config/config.xml";
+#else
 	configPath = QDir::currentPath() + "/Config/config.xml";
+#endif
 	numOfParams = CountParamsInConfig();
 	parsedParameters = std::make_unique<Param[]>(numOfParams);
 	ParseConfig();
@@ -166,13 +170,25 @@ void MainWindow::GetDataSeries(TypeOfQuery toq) {
 			switch (toq)
 			{
 				case DEFAULT:
+#ifdef _WIN32
+					query.exec("SELECT * FROM (SELECT * FROM " + QString::fromStdString(parsedParameters[j].name).toLower() + " ORDER BY date DESC LIMIT 10) sub ORDER BY date ASC");
+#else
 					query.exec("SELECT * FROM (SELECT * FROM " + QString::fromStdString(parsedParameters[j].name) + " ORDER BY date DESC LIMIT 10) sub ORDER BY date ASC");
+#endif
 					break;
 				case LEFT:
+#ifdef _WIN32
+					query.exec("SELECT * FROM (SELECT * FROM " + QString::fromStdString(parsedParameters[j].name).toLower() + " WHERE date < \"" + rightBorder.toString("yyyy-MM-dd hh:mm:ss") + "\" ORDER BY date DESC LIMIT 10) sub ORDER BY date ASC");
+#else
 					query.exec("SELECT * FROM (SELECT * FROM " + QString::fromStdString(parsedParameters[j].name) + " WHERE date < \"" + rightBorder.toString("yyyy-MM-dd hh:mm:ss") + "\" ORDER BY date DESC LIMIT 10) sub ORDER BY date ASC");
+#endif
 					break;
 				case RIGHT:
+#ifdef _WIN32
+					query.exec("SELECT * FROM " + QString::fromStdString(parsedParameters[j].name).toLower() + " WHERE date > \"" + leftBorder.toString("yyyy-MM-dd hh:mm:ss") + "\" LIMIT 10");
+#else
 					query.exec("SELECT * FROM " + QString::fromStdString(parsedParameters[j].name) + " WHERE date > \"" + leftBorder.toString("yyyy-MM-dd hh:mm:ss") + "\" LIMIT 10");
+#endif
 					break;
 			}
 			legend[j] = QString::fromStdString(parsedParameters[j].short_name);
