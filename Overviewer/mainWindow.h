@@ -57,6 +57,7 @@ private:
 	bool dayOrNight = true;
 
 	// Parser attributes
+	QString configPath;
 	std::unique_ptr<Param[]> parsedParameters;
 	std::vector<QString> seriesSets;
 

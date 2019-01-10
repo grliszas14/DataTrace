@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	minToDisplay = 32768;
 
 	// Parse config file
+	configPath = QDir::currentPath() + "/Config/config.xml";
 	numOfParams = CountParamsInConfig();
 	parsedParameters = std::make_unique<Param[]>(numOfParams);
 	ParseConfig();
@@ -92,7 +93,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 int MainWindow::CountParamsInConfig()
 {
 	int countParameters = 0;
-	rapidxml::file<> xmlFile("/home/grliszas14/zpr/DataTrace/Config/config.xml"); //TODO: tu nie moze byc full path
+	rapidxml::file<> xmlFile(configPath.toUtf8().constData());
 	rapidxml::xml_document<> doc;
 	rapidxml::xml_node<> *root_node;
 	doc.parse<0>(xmlFile.data());
@@ -107,7 +108,7 @@ int MainWindow::CountParamsInConfig()
 }
 
 void MainWindow::ParseConfig() {
-	rapidxml::file<> xmlFile("/home/grliszas14/zpr/DataTrace/Config/config.xml"); //TODO: tu nie moze byc full path
+	rapidxml::file<> xmlFile(configPath.toUtf8().constData());
 	rapidxml::xml_document<> doc;
 	rapidxml::xml_node<> *root_node;
 	doc.parse<0>(xmlFile.data());
@@ -139,13 +140,7 @@ void MainWindow::GetDataSeries(TypeOfQuery toq) {
     db.setDatabaseName("DataTrace");
     db.setUserName("grliszas14");
     db.setPassword("test");
-    //bool ok = db.open();
 	db.open();
-	//if (ok == true) {
-	//	qInfo() << "DATABASE CONNECTION OK";
-	//} else {
-	//	qInfo() << "DATABASE CONNECTION NOT OK";
-	//}
 
 	// Check first data_set and get data series
 	std::string current_series_set = parsedParameters[0].seriesSet;
