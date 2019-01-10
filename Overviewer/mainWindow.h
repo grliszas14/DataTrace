@@ -17,6 +17,7 @@
 #include <memory>
 #include <QtCharts>
 #include <vector>
+#include <QtSql>
 #include "controlPanel.h"
 #include "../LibraryDT/param.h"
 
@@ -33,24 +34,39 @@ protected:
 	void contextMenuEvent(QContextMenuEvent *event) override;
 #endif // QT_NO_CONTEXTMENU
 
-private:
-	void createMenus();
-	int CountParamsInConfig();
-	void ParseConfig();
+private slots:
+	void ScrollLeftFunc();
+	void ScrollRightFunc();
 
+private:
 	// GUI attributes
 	QMenu* fileMenu_;
 	QMenu* editMenu_;
 	QMenu* helpMenu_;
+	QPushButton* scrollLeft_;
+	QPushButton* scrollRight_;
 	QFrame* graphsFrame_;
 	ControlPanel* rightPanel_;
 	QChart* chart;
+	QChartView *chartView;
+	QDateTimeAxis *axisX;
+	QValueAxis *axisY;
 	int maxToDisplay, minToDisplay;
+	QDateTime leftBorder, rightBorder;
 	QString chartTitle;
+	bool dayOrNight = true;
 
 	// Parser attributes
 	std::unique_ptr<Param[]> parsedParameters;
 	std::vector<QString> seriesSets;
+
+	// Query attributes
+	QSqlDatabase db;
+	int numOfParams;
+	typedef enum {
+		DEFAULT,
+		LEFT,
+		RIGHT } TypeOfQuery;
 
 	// Data sets attributes
 	int numberOfQueryRows;
@@ -59,6 +75,13 @@ private:
 	std::vector<std::unique_ptr<int[]>> controlVector;
 	std::unique_ptr<int[]> dataSeriesValue;
 	std::unique_ptr<QDateTime[]> dataSeriesTimestamp;
+
+	// Functions
+	void createMenus();
+	int CountParamsInConfig();
+	void ParseConfig();
+	void GetDataSeries(TypeOfQuery);
+	void SetupAndDrawCharts();
 };
 
 #endif // MAINWINDOW_H
