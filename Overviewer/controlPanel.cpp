@@ -17,13 +17,13 @@
 #include <cmath>
 #include "controlPanel.h"
 
-ControlPanel::ControlPanel(QChart *left_chart, QString *legend_names, std::vector<std::unique_ptr<int[]>> *controlVectorFromMainWidget, std::vector<QString> *seriesSetsFromMainWidget) {
+ControlPanel::ControlPanel(QChart *left_chart, QString *paramNames, std::vector<std::unique_ptr<int[]>> *controlVectorFromMainWidget, std::vector<QString> *seriesSetsFromMainWidget) {
 	this->setMinimumSize(minimumWidth, minimumHeight);
 	chart = left_chart;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	controlVector = controlVectorFromMainWidget;
 	seriesSets = seriesSetsFromMainWidget;
-	CreateLegend(legend_names);
+	CreateLegend(paramNames);
 	CreatePropertiesBox();
 
 	dataSetChooser = new QComboBox();
@@ -129,13 +129,13 @@ void ControlPanel::dayNightFunc() {
 	}
 }
 
-void ControlPanel::CreateLegend(QString *legend_names) {
+void ControlPanel::CreateLegend(QString *paramNames) {
 	legend = new QGroupBox(tr("Legend"));
 	QVBoxLayout *layout = new QVBoxLayout;
 
 	for (int i = 0; i < ParamsInLegend; ++i) {
-		if (legend_names[i] != "") {
-			legendLabels[i] = new QPushButton(QString::number(i+1) + ". " + legend_names[i]);
+		if (paramNames[i] != "") {
+			legendLabels[i] = new QPushButton(QString::number(i+1) + ". " + paramNames[i]);
 			legendLabels[i]->setFlat(true);
 			layout->addWidget(legendLabels[i]);
 		} else {

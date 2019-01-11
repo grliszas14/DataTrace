@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	setWindowTitle(tr("Overviewer"));
 	setCentralWidget(centralWidget);
 
+	// Connect arrows
 	connect(scrollLeft_, SIGNAL(clicked()), this, SLOT(ScrollLeftFunc()));
 	connect(scrollRight_, SIGNAL(clicked()), this, SLOT(ScrollRightFunc()));
 }
@@ -283,7 +284,6 @@ MainWindow::~MainWindow()
 	delete fileMenu_;
 	delete editMenu_;
 	delete helpMenu_;
-	delete graphsFrame_;
 	delete rightPanel_;
 }
 
