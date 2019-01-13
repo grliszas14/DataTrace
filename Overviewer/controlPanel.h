@@ -1,14 +1,15 @@
 /*
  * =====================================================================================
  *
- *       Filename:  controlPanel.h
+ *        Filename:  controlPanel.h
  *
- *    Description:  Class containing right panel of application.
+ *			@brief: Class containing right panel of application.
+ *
  *					Displays legend with parameters' names, parameters' properties
  *					if clicked on legend, chooser of data series set and button
  *					enabling/disabling night mode.
  *
- *         Author:  Grzegorz Wojciechowski
+ *         @author:  Grzegorz Wojciechowski
  *
  * =====================================================================================
  */

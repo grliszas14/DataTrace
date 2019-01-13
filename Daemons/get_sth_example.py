@@ -1,11 +1,11 @@
 #!/usr/bin/env python2
 
-from weather import Weather, Unit
 import time
 import sys
 import socket
+import random
 
-class TemperatureReader:
+class ExampleDaemon:
 
 	def send_to_server(self, value, idx):
 		timestamp = int(time.time())
@@ -21,18 +21,23 @@ class TemperatureReader:
 
 
 	def update_values(self, idx):
-		weather = Weather(unit=Unit.CELSIUS)
-		lookup = weather.lookup_by_location('warsaw')
-		condition = lookup.condition
-		self.send_to_server(int(condition.temp), idx)
+		# ----------------------
+		# HERE WRITE YOUR CODE
+		#
+		#
+		#
+		#
+		#
+		# ---------------------
+		self.send_to_server(VALUE_TO_SEND, idx)
 
 
 def main(argv):
-	temp_reader = TemperatureReader()
+	ex_daemon = ExampleDaemon()
 
 	time.sleep(10)
 	while(True):
-		temp_reader.update_values(sys.argv[1])
+		ex_daemon.update_values(sys.argv[1])
 		time.sleep(10)
 
 if __name__ == "__main__":
