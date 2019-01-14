@@ -28,6 +28,7 @@
 #include <vector>
 #include <memory>
 
+/** @brief Class making right panel of application: displaying legend, chooser with data sets, parameter properties and button with day/night mode. */
 class ControlPanel : public QFrame
 {
 	Q_OBJECT
@@ -60,22 +61,41 @@ private:
 	/** Calculates deviation of value of currently displaying data of chosen param. */
 	double CalculateDeviation(int series);
 
-	enum { ParamsInLegend = 5, NumOfProperties = 4 };		/** Maximum number of parameters in legend, number of all properties of parameter. */
-	const int minimumWidth = 200;							/** Maximum width of right panel of the app.*/
-	const int minimumHeight = 500;							/** Minimum height of right panel of the app. */
-	const int NUM_OF_PROBES_TO_CALC = 10;					/** Number of probes to take into account in calculating properties. */
-	bool day_or_night = true;								/** Variable deciding which mode to draw charts: dark/light. */
-	std::vector<std::unique_ptr<int[]>> *controlVector;		/** Vector containing samples used to calculate parameter properties. */
-	std::vector<QString> *seriesSets;						/** Vector containing names of all availabe series sets. Displayed in dataSetChooser.*/
+	/** Maximum number of parameters in legend, number of all properties of parameter. */
+	enum {
+	/** Maximum number of parameters in legend. */
+		ParamsInLegend = 5,
+	/** Number of all properties of parameter. */
+		NumOfProperties = 4 };
+	/** Maximum width of right panel of the app.*/
+	const int minimumWidth = 200;
+	/** Minimum height of right panel of the app. */
+	const int minimumHeight = 500;
+	/** Number of probes to take into account in calculating properties. */
+	const int NUM_OF_PROBES_TO_CALC = 10;
+	/** Variable deciding which mode to draw charts: dark/light. */
+	bool day_or_night = true;
+	/** Vector containing samples used to calculate parameter properties. */
+	std::vector<std::unique_ptr<int[]>> *controlVector;
+	/** Vector containing names of all availabe series sets. Displayed in dataSetChooser. */
+	std::vector<QString> *seriesSets;
 
-	QChart *chart;											/** Widget managing graphical representation of the chart's series, legend and axes. */
-	QGroupBox *outsideGroupBox;								/** Box grouping all widgets in control panel. */
-	QGroupBox *legend;										/** Box grouping names of parameters. */
-	QComboBox *dataSetChooser;								/** Chooser of currently displayed data set. */
-	QGroupBox *seriesProperties;							/** Box grouping properties of parameter. */
-	QPushButton *nightDay;									/** Button changing display mode: dark/light. */
-	QPushButton *legendLabels[ParamsInLegend];				/** Labels (flat buttons exactly) with parameter name on it. */
-	QLabel *propertiesLabels[NumOfProperties];				/** Labels with calculated properties of parameter. */
+	/** Widget managing graphical representation of the chart's series, legend and axes. */
+	QChart *chart;
+	/** Box grouping all widgets in control panel. */
+	QGroupBox *outsideGroupBox;
+	/** Box grouping names of parameters. */
+	QGroupBox *legend;
+	/** Chooser of currently displayed data set. */
+	QComboBox *dataSetChooser;
+	/** Box grouping properties of parameter. */
+	QGroupBox *seriesProperties;
+	/** Button changing display mode: dark/light. */
+	QPushButton *nightDay;
+	/** Labels (flat buttons exactly) with parameter name on it. */
+	QPushButton *legendLabels[ParamsInLegend];
+	/** Labels with calculated properties of parameter. */
+	QLabel *propertiesLabels[NumOfProperties];
 };
 
 #endif //CONTROLPANEL_H
