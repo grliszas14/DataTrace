@@ -5,7 +5,7 @@
  *
  *    Description:  Main app for overviewing gathered data
  *
- *        Authors:  Grzegorz Wojciechowski, Michał Skarzyński
+ *        Authors:  Grzegorz Wojciechowski
  *
  * =====================================================================================
  */
